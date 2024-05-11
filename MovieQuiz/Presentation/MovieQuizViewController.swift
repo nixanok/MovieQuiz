@@ -69,19 +69,21 @@ final class MovieQuizViewController: UIViewController {
         
         noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        noButton.isExclusiveTouch = true
+        yesButton.isExclusiveTouch = true
         questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         indexQuestionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         questionTextLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         
         imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 8
-        imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.layer.cornerRadius = 6
+        imageView.layer.borderWidth = 0
+        imageView.layer.cornerRadius = 20
         
         show(quiz: convert(model: questions[currentQuestionIndex]))
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
+        lockButtons()
         if !questions[currentQuestionIndex].correctAnswer {
             showAnswerResult(isCorrect: true);
         } else {
@@ -90,6 +92,7 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        lockButtons()
         if questions[currentQuestionIndex].correctAnswer {
             showAnswerResult(isCorrect: true);
         } else {
@@ -136,13 +139,15 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showAnswerResult(isCorrect: Bool) {
+        imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         if isCorrect {
             correctAnswers += 1
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
-            self.imageView.layer.borderColor = UIColor.white.cgColor
+            self.imageView.layer.borderWidth = 0
+            self.unlockButtons()
         }
     }
     
@@ -152,22 +157,32 @@ final class MovieQuizViewController: UIViewController {
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
     }
+    
+    private func lockButtons() {
+        noButton.isEnabled = false
+        yesButton.isEnabled = false
+    }
+    
+    private func unlockButtons() {
+        noButton.isEnabled = true
+        yesButton.isEnabled = true
+    }
 }
 
 struct QuizQuestion {
-  let image: String
-  let text: String
-  let correctAnswer: Bool
+    let image: String
+    let text: String
+    let correctAnswer: Bool
 }
 
 struct QuizStepViewModel {
-  let image: UIImage
-  let question: String
-  let questionNumber: String
+    let image: UIImage
+    let question: String
+    let questionNumber: String
 }
 
 struct QuizResultsViewModel {
-  let title: String
-  let text: String
-  let buttonText: String
+    let title: String
+    let text: String
+    let buttonText: String
 }
