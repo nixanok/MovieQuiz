@@ -7,18 +7,18 @@
 
 import UIKit
 
-class AlertPresenter {
+final class AlertPresenter {
     weak var delegate : UIViewController?
     
     func showAlert(with model: AlertModel) {
         let alert = UIAlertController(
-                title: model.title,
-                message: model.message,
-                preferredStyle: .alert)
+            title: model.title,
+            message: model.message,
+            preferredStyle: .alert)
         
         let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
-                    model.action()
-                }
+            model.action()
+        }
         
         alert.addAction(action)
         

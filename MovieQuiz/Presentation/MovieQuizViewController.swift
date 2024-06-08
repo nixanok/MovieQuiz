@@ -51,15 +51,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
-           return
-       }
-
-       currentQuestion = question
-       let viewModel = convert(model: question)
+            return
+        }
         
-       DispatchQueue.main.async { [weak self] in
-           self?.show(quiz: viewModel)
-       }
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
@@ -107,17 +107,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func show(quiz result: QuizResultsViewModel) {
-            let alertModel = AlertModel(
-                title: result.title,
-                message: result.text,
-                buttonText: result.buttonText,
-                action: {
-                    self.currentQuestionIndex = 0
-                    self.correctAnswers = 0
-                    self.questionFactory?.requestNextQuestion()
-                }
-            )
-
+        let alertModel = AlertModel(
+            title: result.title,
+            message: result.text,
+            buttonText: result.buttonText,
+            action: {
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                self.questionFactory?.requestNextQuestion()
+            }
+        )
+        
         alertPresenter?.showAlert(with: alertModel)
     }
     
